@@ -42,18 +42,18 @@ GRAFO* grafo_criar(int n){ //A função retorna ponteiro para grafo
     }
 }
 
-int **criar_matriz(int n){
-    int **matriz = malloc(sizeof(int*) * n); //vetor de ponteiro (Cada posição desse vetor será uma linha da matriz)
+int **criar_matriz(int n){ //método de criação de matriz: vetor de ponteiros de linhas contíguas
+    int **matriz = malloc(sizeof(int*) * n); //vetor de ponteiro (Cada posição desse vetor será o inicio de cada linha da matriz)
         if(matriz != NULL){
-            for(int i = 0; i < n; i++){ //criando as linhas da matriz
-                matriz[i] = malloc(sizeof(int) * n);
-                if(matriz[i] == NULL){ //evitando memory leak
-                    for(int j = 0; j < i; j++){
-                            free(matriz[j]);
-                    }
-                    free(matriz);
-                    return NULL;
+            matriz[0] = malloc(sizeof(int) * n * n); // aloca um vetor com todos os elementos da matriz
+            
+            if(matriz[0] != NULL){
+                for(int i = 1; i < n; i++){ // ajusta os demais ponteiros de linhas (i > 0)
+                    matriz[i] = matriz[0] + i * n;
                 }
+            }else{
+                free(matriz);
+                return NULL;
             }
         }else{
             return NULL;
