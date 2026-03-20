@@ -12,8 +12,11 @@
     
     void vertice_adjacentes(GRAFO* g, int vertice); //obter lista dos vertices adjacentes a determinado vertice
     int vertice_total(); //obter o número total de vértices do grafo
+
     
     GRAFO transposto_obter(); //obter o transposto de um grafo direcionado
+
+    void vertices_arestas_imprimir(GRAFO* g);
     void grafo_imprimir(GRAFO* g);
     void matriz_imprimir(GRAFO* g);
 

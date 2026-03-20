@@ -7,12 +7,6 @@ struct grafo_{
     int **matriz;
 };
 
-struct aresta_{
-    int extremo_a;
-    int extremo_b;
-    int peso;
-};
-
 int **criar_matriz(int n); //função auxiliar do grafo_criar
 
 GRAFO* grafo_criar(int n){ //A função retorna ponteiro para grafo
@@ -113,12 +107,54 @@ bool aresta_remover(GRAFO* g, int a, int b){
     return 0;
 }
 
+void vertices_arestas_imprimir(GRAFO* g){
+    if(g == NULL){ printf("Grafo não encontrado\n"); return; }
+
+    printf("V = [");
+    for (int i = 1; i <= g->n_vertices; i++){
+        if(i == 1){
+            printf("%d,", i);
+        }else if(i == g->n_vertices){
+            printf(" %d]\n", i);
+        }else{
+            printf(" %d,", i);
+        }
+    }
+
+    printf("E = [");
+
+    int primeira = 1; //formatacao das arestas separadas por virgula
+
+    for(int j = 0; j < g->n_vertices; j++){
+        for(int k = j + 1; k < g->n_vertices; k++){ //"j+1" para nao repetir arestas
+            if(g->matriz[j][k] != -1){
+
+                if(!primeira){
+                    printf(", ");
+                }
+
+                printf("(%d, %d)", j+1, k+1);
+                primeira = 0;
+            }
+        }
+    }
+
+    printf("]\n");
+    return;
+}
+
+void grafo_imprimir(GRAFO* g);
+
 void matriz_imprimir(GRAFO* g){
+    if(g == NULL){ printf("Grafo não encontrado\n"); return; }
+
     printf("   ");
+
     for (int i = 1; i <= g->n_vertices; i++){
         printf("  %d", i);
     }
     printf("\n---");
+
     for (int i = 1; i <= g->n_vertices; i++){
         printf("---");
     }
@@ -137,17 +173,17 @@ void matriz_imprimir(GRAFO* g){
         }
         printf("\n");
     }
+
+    return;
+    // Exemplo da Matriz do enunciado
+    //      1  2  3  4  5  6  7  8 
+    // ----------------------------
+    // 1 |     1  4              3 
+    // 2 |  1     5  6           2 
+    // 3 |  4  5     9  8          
+    // 4 |     6  9     7 10 11
+    // 5 |        8  7       
+    // 6 |          10      
+    // 7 |          11      
+    // 8 |  3  2             
 }
-
-
-// Exemplo da Matriz do enunciado
-//      1  2  3  4  5  6  7  8 
-// ----------------------------
-// 1 |     1  4              3 
-// 2 |  1     5  6           2 
-// 3 |  4  5     9  8          
-// 4 |     6  9     7 10 11
-// 5 |        8  7       
-// 6 |          10      
-// 7 |          11      
-// 8 |  3  2             
