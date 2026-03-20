@@ -61,6 +61,47 @@ int **criar_matriz(int n){ //método de criação de matriz: vetor de ponteiros 
     return matriz;
 }
 
-ARESTA* aresta_inserir(GRAFO* g, int a, int b, int peso){
-    
+bool aresta_inserir(GRAFO* g, int a, int b, int peso){
+    if(g == NULL){ return 0; }
+
+    if(
+        a >= 0 && a < g->n_vertices && 
+        b >= 0 && b < g->n_vertices
+    ){
+        g->matriz[a][b] = peso;
+        g->matriz[b][a] = peso;
+
+        return 1;
+    }
+    return 0;
+}
+
+bool aresta_verificar(GRAFO* g, int a, int b){
+    if(g == NULL){ return 0; }
+
+    if(
+        a >= 0 && a < g->n_vertices && 
+        b >= 0 && b < g->n_vertices
+    ){
+        if(g->matriz[a][b] != -1){ // verificar "g->matriz[b][a] != -1" é redundante
+            return 1;
+        }
+    }
+    return 0;
+}
+
+bool aresta_remover(GRAFO* g, int a, int b){
+    if(g == NULL){ return 0; }
+
+    if(
+        a >= 0 && a < g->n_vertices && 
+        b >= 0 && b < g->n_vertices
+    ){
+        g->matriz[a][b] = -1;
+        g->matriz[b][a] = -1;
+
+        return 1;
+    }
+    printf("-1\n");
+    return 0;
 }
