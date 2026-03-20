@@ -14,7 +14,8 @@
     int vertice_total(); //obter o número total de vértices do grafo
     
     GRAFO transposto_obter(); //obter o transposto de um grafo direcionado
-    void grafo_imprimir();
+    void grafo_imprimir(GRAFO* g);
+    void matriz_imprimir(GRAFO* g);
 
 
 #endif

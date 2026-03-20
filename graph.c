@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "graph.h"
 
 struct grafo_{
@@ -64,9 +65,11 @@ int **criar_matriz(int n){ //método de criação de matriz: vetor de ponteiros 
 bool aresta_inserir(GRAFO* g, int a, int b, int peso){
     if(g == NULL){ return 0; }
 
+    a--; b--;
+
     if(
-        a >= 0 && a < g->n_vertices && 
-        b >= 0 && b < g->n_vertices
+        (a >= 0 && a < g->n_vertices) && 
+        (b >= 0 && b < g->n_vertices)
     ){
         g->matriz[a][b] = peso;
         g->matriz[b][a] = peso;
@@ -79,9 +82,11 @@ bool aresta_inserir(GRAFO* g, int a, int b, int peso){
 bool aresta_verificar(GRAFO* g, int a, int b){
     if(g == NULL){ return 0; }
 
+    a--; b--;
+
     if(
-        a >= 0 && a < g->n_vertices && 
-        b >= 0 && b < g->n_vertices
+        (a >= 0 && a < g->n_vertices) && 
+        (b >= 0 && b < g->n_vertices)
     ){
         if(g->matriz[a][b] != -1){ // verificar "g->matriz[b][a] != -1" é redundante
             return 1;
@@ -92,6 +97,8 @@ bool aresta_verificar(GRAFO* g, int a, int b){
 
 bool aresta_remover(GRAFO* g, int a, int b){
     if(g == NULL){ return 0; }
+
+    a--; b--;
 
     if(
         a >= 0 && a < g->n_vertices && 
@@ -105,3 +112,42 @@ bool aresta_remover(GRAFO* g, int a, int b){
     printf("-1\n");
     return 0;
 }
+
+void matriz_imprimir(GRAFO* g){
+    printf("   ");
+    for (int i = 1; i <= g->n_vertices; i++){
+        printf("  %d", i);
+    }
+    printf("\n---");
+    for (int i = 1; i <= g->n_vertices; i++){
+        printf("---");
+    }
+    printf("\n");
+    
+    for (int i = 1; i <= g->n_vertices; i++){
+        printf("%d |", i);
+        for(int j = 0; j < g->n_vertices; j++){
+            if(g->matriz[i-1][j] < 0){
+                printf("   ");
+            }else if(g->matriz[i-1][j] < 10){
+                printf("  %d", g->matriz[i-1][j]);
+            }else{
+                printf(" %d", g->matriz[i-1][j]);
+            }
+        }
+        printf("\n");
+    }
+}
+
+
+// Exemplo da Matriz do enunciado
+//      1  2  3  4  5  6  7  8 
+// ----------------------------
+// 1 |     1  4              3 
+// 2 |  1     5  6           2 
+// 3 |  4  5     9  8          
+// 4 |     6  9     7 10 11
+// 5 |        8  7       
+// 6 |          10      
+// 7 |          11      
+// 8 |  3  2             
