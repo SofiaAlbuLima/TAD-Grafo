@@ -10,15 +10,12 @@
     bool aresta_verificar(GRAFO* g, int a, int b); //verificar se existe determinada aresta no grafo
     bool aresta_remover(GRAFO* g, int a, int b);
     
-    void vertice_adjacentes(GRAFO* g, int vertice); //obter lista dos vertices adjacentes a determinado vertice
-    int vertice_total(); //obter o número total de vértices do grafo
+    void vertices_adjacentes(GRAFO* g, int vertice); //obter lista dos vertices adjacentes a determinado vertice
+    int vertice_com_mais_vizinhos(GRAFO* g);
 
-    
-    GRAFO transposto_obter(); //obter o transposto de um grafo direcionado
-
-    void vertices_arestas_imprimir(GRAFO* g);
-    void grafo_imprimir(GRAFO* g);
+    void vertices_arestas_imprimir(GRAFO* g); //imprimir lista de vértices e lista de arestas
     void matriz_imprimir(GRAFO* g);
 
+    bool grafo_destruir(GRAFO *g);
 
 #endif

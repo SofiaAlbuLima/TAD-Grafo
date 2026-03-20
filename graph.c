@@ -107,17 +107,41 @@ bool aresta_remover(GRAFO* g, int a, int b){
     return 0;
 }
 
+void vertices_adjacentes(GRAFO* g, int vertice){
+    if(g == NULL){ printf("Grafo não encontrado\n"); return; }
+
+    vertice--;
+    
+    printf("[");
+    int primeiro = 1;
+    for(int j = 0; j < g->n_vertices; j++){
+        if(g->matriz[vertice][j] != -1){
+            if(!primeiro){
+                printf(", ");
+            }
+            printf("%d", j + 1);
+            primeiro = 0;
+        }
+    }
+    printf("]\n");
+}
+    
+int vertice_com_mais_vizinhos(GRAFO* g);
+
 void vertices_arestas_imprimir(GRAFO* g){
     if(g == NULL){ printf("Grafo não encontrado\n"); return; }
 
     printf("V = [");
-    for (int i = 1; i <= g->n_vertices; i++){
-        if(i == 1){
-            printf("%d,", i);
-        }else if(i == g->n_vertices){
-            printf(" %d]\n", i);
-        }else{
-            printf(" %d,", i);
+    if(g->n_vertices == 1){ printf("1]\n"); }
+    else{ 
+        for (int i = 1; i <= g->n_vertices; i++){
+            if(i == 1){
+                printf("%d,", i);
+            }else if(i == g->n_vertices){
+                printf(" %d]\n", i);
+            }else{
+                printf(" %d,", i);
+            }
         }
     }
 
@@ -142,8 +166,6 @@ void vertices_arestas_imprimir(GRAFO* g){
     printf("]\n");
     return;
 }
-
-void grafo_imprimir(GRAFO* g);
 
 void matriz_imprimir(GRAFO* g){
     if(g == NULL){ printf("Grafo não encontrado\n"); return; }
@@ -186,4 +208,16 @@ void matriz_imprimir(GRAFO* g){
     // 6 |          10      
     // 7 |          11      
     // 8 |  3  2             
+}
+
+bool grafo_destruir(GRAFO *g){
+    if(g == NULL) return 0;
+    
+    if(g->matriz != NULL){
+        free(g->matriz[0]); // libera os dados
+        free(g->matriz);    // libera os ponteiros
+    }
+
+    free(g);
+    return 1;
 }
