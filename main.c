@@ -23,15 +23,16 @@ int main(void) {
     
         printf("[1] Adicionar aresta\n");
         printf("[2] Imprimir matriz\n");
-        printf("[3] Imprimir vérices e arestas\n");
-        printf("[4] Imprimir vérices adjacentes de outro vértice\n");
+        printf("[3] Imprimir vertices e arestas\n");
+        printf("[4] Imprimir vertices adjacentes de outro vertice\n");
+        printf("[5] Imprimir vertice com maior quantidade de vizinhos\n");
         printf("[0] Destruir grafo e finalizar programa\n\n");
     
         scanf("%d", &opcao_menu);
         
         switch (opcao_menu){
             case 1:
-                printf("Por favor, informe na seguinte ordem: [vértice a, vérice b, peso da aresta]\n");
+                printf("Por favor, informe na seguinte ordem: [vertice a, verice b, peso da aresta]\n");
                     scanf("%d", &a);
                     scanf("%d", &b);
                     scanf("%d", &peso);
@@ -55,9 +56,12 @@ int main(void) {
                 printf("\nEscolha um vertice para descobrir seus vizinhos: ");
                 int adj; scanf("%d", &adj);
                 printf("\nVertices Adjacentes:\n");
-                vertices_adjacentes(g, adj);
+                // vertices_adjacentes(g, adj);
                 break;
             }
+            case 5: 
+                printf("\nVertice com maior quantidade de vizinhos: %d\n", vertice_com_mais_vizinhos(g));
+                break;
             case 0:
                 if(grafo_destruir(g)){
                     g = NULL;
