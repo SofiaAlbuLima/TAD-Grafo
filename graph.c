@@ -43,7 +43,7 @@ int **criar_matriz(int n){ //método de criação de matriz: vetor de ponteiros 
             matriz[0] = malloc(sizeof(int) * n * n); // aloca um vetor com todos os elementos da matriz
             
             if(matriz[0] != NULL){
-                for(int i = 1; i < n; i++){ // ajusta os demais ponteiros de linhas (i > 0)
+                for(int i = 1; i < n; i++){ // ajusta os demais ponteiros de linhas (i > 0). i = 0, a posição matriz[0] já está ajustada
                     matriz[i] = matriz[0] + i * n;
                 }
             }else{
