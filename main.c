@@ -26,6 +26,7 @@ int main(void) {
         printf("[3] Imprimir vertices e arestas\n");
         printf("[4] Imprimir vertices adjacentes de outro vertice\n");
         printf("[5] Imprimir vertice com maior quantidade de vizinhos\n");
+        printf("[6] Checar existência de aresta\n");
         printf("[0] Destruir grafo e finalizar programa\n\n");
     
         scanf("%d", &opcao_menu);
@@ -36,22 +37,24 @@ int main(void) {
                     scanf("%d", &a);
                     scanf("%d", &b);
                     scanf("%d", &peso);
-                aresta_inserir(g, a, b, peso);
 
-                if(aresta_verificar(g,a,b)){
+                if(aresta_inserir(g, a, b, peso)){
                     printf("Aresta adicionada ao grafo!\n");
                 }else{
                     printf("Erro ao adicionar aresta\n");
                 }
                 break;
+
             case 2:
                 printf("\nMatriz de adjacência:\n");
                 matriz_imprimir(g);
                 break;
+
             case 3:
                 printf("\nVertices(V) e Arestas(E):\n");
                 vertices_arestas_imprimir(g);
                 break;
+
             case 4: { //chaves para escopo local
                 printf("\nEscolha um vertice para descobrir seus vizinhos: ");
                 int adj; scanf("%d", &adj);
@@ -59,9 +62,22 @@ int main(void) {
                 // vertices_adjacentes(g, adj);
                 break;
             }
+
             case 5: 
                 printf("\nVertice com maior quantidade de vizinhos: %d\n", vertice_com_mais_vizinhos(g));
                 break;
+
+            case 6:
+                printf("Por favor, informe na seguinte ordem: [vertice a, verice b]\n");
+                    scanf(" %d", &a);
+                    scanf(" %d", &b);
+                if (aresta_verificar(g, a, b)) {
+                    printf("\nA aresta existe.\n");
+                } else {
+                    printf("\nA aresta não existe.\n");
+                }
+                break;
+
             case 0:
                 if(grafo_destruir(g)){
                     g = NULL;
@@ -72,6 +88,7 @@ int main(void) {
                     return 1;
                 }
                 break;
+
             default:
                 printf("\nOpcao invalida!\n");
                 break;
