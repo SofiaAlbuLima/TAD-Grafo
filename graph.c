@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "graph.h"
 
 struct grafo_{
@@ -101,13 +99,50 @@ bool aresta_remover(GRAFO* g, int a, int b){
         g->matriz[a][b] = -1;
         g->matriz[b][a] = -1;
 
-        return 1;
+        return true;
     }
     printf("-1\n");
-    return 0;
+    return false;
 }
 
-void vertices_adjacentes(GRAFO* g, int vertice);
+int *criar_vetor_vertices_adjacentes(GRAFO* g, int vertice, int *tam_adjacentes) {
+    if(g == NULL) return 0;
+
+    int cont=0;
+    int temp[g->n_vertices-1]; // g->n_vertices-1 por ser o tamanho máximo que o vetor final pode assumir: o de uma linha ou coluna inteira sem o pŕoprio vértice
+    vertice--;
+
+    // contando a quantidade de espaço a ser alocado enquanto guarda os vértices adjacentes num array estático temporário
+    for (int i=0; i < g->n_vertices; i++) {
+        if (g->matriz[i][vertice] != -1 && i!=vertice) {
+            temp[cont] = i+1;
+            cont++;
+        }
+    }
+
+    // aloca o vetor definitivo
+    int *vetor = malloc(sizeof(int)*cont);
+
+    if (vetor != NULL) {
+        // passa as informações do vetor temporário para o definitivo
+        for (int i=0; i<cont; i++) {
+            vetor[i] = temp[i];
+        }
+    }
+
+    *tam_adjacentes = cont;
+    return vetor; // se vetor for NULL, então devolve NULL. Caso contrário, devolve seu endereço.
+}
+
+void destruir_vetor_vertices_adjacentes(int **vetor) {
+    if (vetor == NULL) return;
+    if (*vetor == NULL) return;
+
+    free(*vetor);
+    *vetor = NULL;
+    
+    return;
+}
     
 int vertice_com_mais_vizinhos(GRAFO* g){
     if(g == NULL){ return -1; }
@@ -215,14 +250,24 @@ void matriz_imprimir(GRAFO* g){
     // 8 |  3  2             
 }
 
-bool grafo_destruir(GRAFO *g){
-    if(g == NULL) return 0;
+int **obter_copia_matriz(GRAFO* g) {
     
-    if(g->matriz != NULL){
-        free(g->matriz[0]); // libera os dados
-        free(g->matriz);    // libera os ponteiros
+}
+
+void destruir_copia_matriz(int **copia) {
+
+}
+
+bool grafo_destruir(GRAFO **g){
+    if(g == NULL) return false;
+    if((*g) == NULL) return false;
+
+    if((*g)->matriz != NULL){
+        free((*g)->matriz[0]); // libera os dados
+        free((*g)->matriz);    // libera os ponteiros
     }
 
-    free(g);
-    return 1;
+    free(*g);
+    *g = NULL;
+    return true;
 }
