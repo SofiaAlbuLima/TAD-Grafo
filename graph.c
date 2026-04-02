@@ -18,11 +18,9 @@ GRAFO* grafo_criar(int n){ //A função retorna ponteiro para grafo
             return NULL;
         }
 
-        //inicializando arestas com valor "-1"
-        for(int j = 0; j < n; j++){
-            for(int k = 0; k < n; k++){
-                matriz[j][k] = -1;
-            }
+        // inicializando arestas com valor "-1", aproveitando da sua alocação linear
+        for(int i=0; i < (n*n); i++){ // n*n é o tamanho de espaços da matriz, e comprimento do array
+            matriz[0][i] = -1;
         }
 
         //Completando Struct
@@ -54,6 +52,17 @@ int **criar_matriz(int n){ //método de criação de matriz: vetor de ponteiros 
     return matriz;
 }
 
+// desaloca o espaço dedicado aos dados e ao array de vetores, além de deixar o vetor da matriz nulo
+void destruir_matriz (int ***ponteiro_matriz) {
+    if(*ponteiro_matriz != NULL) {
+        free((*ponteiro_matriz)[0]); // libera o array longo que corresponde ao conteúdo da matriz, alocado no primeiro ponteiro do array de ponteiros
+        free(*ponteiro_matriz); // libera a memória do array de ponteiros
+        *ponteiro_matriz = NULL;
+    }
+    return;
+}
+
+// retorna verdadeiro se a aresta foi incluida e falso caso contrário
 bool aresta_inserir(GRAFO* g, int a, int b, int peso){
     if(g == NULL){ return 0; }
 
@@ -71,8 +80,9 @@ bool aresta_inserir(GRAFO* g, int a, int b, int peso){
     return 0;
 }
 
+// verifica se a aresta existe comparando-a com -1. Devolve verdadeiro caso exista, senão devolve falso
 bool aresta_verificar(GRAFO* g, int a, int b){
-    if(g == NULL){ return 0; }
+    if(g == NULL){ return false; }
 
     a--; b--;
 
@@ -80,15 +90,16 @@ bool aresta_verificar(GRAFO* g, int a, int b){
         (a >= 0 && a < g->n_vertices) && 
         (b >= 0 && b < g->n_vertices)
     ){
-        if(g->matriz[a][b] != -1){ // verificar "g->matriz[b][a] != -1" é redundante
-            return 1;
+        if(g->matriz[a][b] != -1){ // verificar "g->matriz[b][a] != -1" é redundante pela matriz ser simétrica
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
+// remove uma aresta, colocando -1. Devolve verdadeiro, se bem sucedido, e falso caso contrário
 bool aresta_remover(GRAFO* g, int a, int b){
-    if(g == NULL){ return 0; }
+    if(g == NULL){ return false; }
 
     a--; b--;
 
@@ -105,11 +116,12 @@ bool aresta_remover(GRAFO* g, int a, int b){
     return false;
 }
 
+// dado um grafo e um vértice específico, devolve os adjacentes. O terceiro parâmetro serve para devolver o tamanho desse vetor, para que seja possível fazer operações nele
 int *criar_vetor_vertices_adjacentes(GRAFO* g, int vertice, int *tam_adjacentes) {
     if(g == NULL) return 0;
 
     int cont=0;
-    int temp[g->n_vertices-1]; // g->n_vertices-1 por ser o tamanho máximo que o vetor final pode assumir: o de uma linha ou coluna inteira sem o pŕoprio vértice
+    int temp[(g->n_vertices)-1]; // g->n_vertices-1 por ser o tamanho máximo que o vetor final pode assumir: o de uma linha ou coluna inteira sem o pŕoprio vértice
     vertice--;
 
     // contando a quantidade de espaço a ser alocado enquanto guarda os vértices adjacentes num array estático temporário
@@ -134,6 +146,7 @@ int *criar_vetor_vertices_adjacentes(GRAFO* g, int vertice, int *tam_adjacentes)
     return vetor; // se vetor for NULL, então devolve NULL. Caso contrário, devolve seu endereço.
 }
 
+// desaloca o vetor de vértices adjacentes, deixando o ponteiro do usuário apontando pra nulo
 void destruir_vetor_vertices_adjacentes(int **vetor) {
     if (vetor == NULL) return;
     if (*vetor == NULL) return;
@@ -143,7 +156,8 @@ void destruir_vetor_vertices_adjacentes(int **vetor) {
     
     return;
 }
-    
+
+// devolve o primeiro vértice com mais vizinhos
 int vertice_com_mais_vizinhos(GRAFO* g){
     if(g == NULL){ return -1; }
 
@@ -168,6 +182,7 @@ int vertice_com_mais_vizinhos(GRAFO* g){
     return(v + 1);
 }
 
+// imprime os vértices e as arestas na formatação pedida
 void vertices_arestas_imprimir(GRAFO* g){
     if(g == NULL){ return; }
 
@@ -207,6 +222,7 @@ void vertices_arestas_imprimir(GRAFO* g){
     return;
 }
 
+// imprime a matriz diretamente, sem precisar pedir uma cópia da matriz
 void matriz_imprimir(GRAFO* g){
     if(g == NULL){ return; }
 
@@ -250,24 +266,33 @@ void matriz_imprimir(GRAFO* g){
     // 8 |  3  2             
 }
 
+// obtém uma cópia da matriz do grafo, uma vez que a original não pode ser passada para que não haja como alterá-la diretamente
 int **obter_copia_matriz(GRAFO* g) {
-    
+    int **matriz = criar_matriz(g->n_vertices);
+    // fazendo a cópia da matriz do grafo inicial, aproveitando da sua alocação linear:
+    if(matriz != NULL) {
+        for(int i=0; i < (g->n_vertices)*(g->n_vertices); i++) { // (g->n_vertices)*(g->n_vertices) por ser o tamanho total do array
+            matriz[0][i] = g->matriz[0][i];
+        }
+    }
+
+    return matriz;
 }
 
-void destruir_copia_matriz(int **copia) {
-
+// desaloca a matriz chamando a função interna especializada para desocação de matriz. O vetor do usuário passa a apontar para nulo com ela também
+void destruir_copia_matriz(int ***ponteiro_copia) {
+    destruir_matriz(ponteiro_copia);
+    return;
 }
 
+// desaloca o espaço do grafo e torna o ponteiro do usuário nulo
 bool grafo_destruir(GRAFO **g){
     if(g == NULL) return false;
     if((*g) == NULL) return false;
 
-    if((*g)->matriz != NULL){
-        free((*g)->matriz[0]); // libera os dados
-        free((*g)->matriz);    // libera os ponteiros
-    }
-
+    destruir_matriz(&(*g)->matriz);
     free(*g);
     *g = NULL;
+
     return true;
 }

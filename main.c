@@ -1,9 +1,17 @@
+/*
+Trabalho 1 de Grafos (SCC0216)
+
+ALUNAS:
+Lorena Moreira Borges - 16883652
+Sofia Albuquerque Lima - 16900810
+*/
+
 #include <stdio.h>
 #include "graph.h"
 
 int main(void) {
-    int opcao_menu;
-    int numero_vertices, a, b, peso;
+    int opcao_menu = 8; // primeiro número que cai no caso default, para que, se algo der errado, o programa rode de novo sem executar nada
+    int numero_vertices, a, b;
 
     printf("Seja bem vindo(a) ao TAD Grafo!\nVamos criar um grafo, quantos vertices voce deseja?\n");
     scanf("%d", &numero_vertices);
@@ -16,8 +24,7 @@ int main(void) {
 
     printf("Grafo criado com sucesso!\n");
 
-    int flag = 1;
-    while(flag > 0){
+    while(opcao_menu != 0) {
 
         printf("\nEscolha o que voce deseja fazer:\n");
     
@@ -33,7 +40,9 @@ int main(void) {
         scanf("%d", &opcao_menu);
         
         switch (opcao_menu){
-            case 1:
+            case 1: // adicionar aresta
+            { // chaves para a variável ser de escopo local (deletada assim que sair do escopo)
+                int peso;
                 printf("Por favor, informe na seguinte ordem: [vertice a, verice b, peso da aresta]\n");
                     scanf("%d", &a);
                     scanf("%d", &b);
@@ -45,18 +54,33 @@ int main(void) {
                     printf("Erro ao adicionar aresta\n");
                 }
                 break;
+            }
 
-            case 2:
+            case 2: // imprimir matriz
+            {
+                int **copia_matriz = obter_copia_matriz(g);
+
+                // imprime a cópia da matriz com a formatação pedida:
                 printf("\nMatriz de adjacência:\n");
-                matriz_imprimir(g); // acho melhor usar a função de cópia e printar aqui para dar um uso pra função que foi pedida na especificação
-                break;
+                for(int i=0; i<numero_vertices; i++) {
+                    for(int j=0; j<numero_vertices; j++) {
+                        printf("%4d", copia_matriz[i][j]);
+                    }
+                    printf("\n");
+                }
 
-            case 3:
+                destruir_copia_matriz(&copia_matriz);
+
+                break;
+            }
+
+            case 3: // imprimir vértices e arestas
                 printf("\nVertices(V) e Arestas(E):\n");
                 vertices_arestas_imprimir(g);
                 break;
 
-            case 4: { //chaves para escopo local
+            case 4: // imprimir vértices adjacentes de outro vértice
+            { //chaves para as variáveis serem de escopo local
                 printf("\nEscolha um vertice para descobrir seus vizinhos: ");
                 int vertice; scanf("%d", &vertice);
                 
@@ -67,7 +91,7 @@ int main(void) {
                 else {
                     // imprimindo vértices adjacentes usando o array devolvido:
                     printf("\nVertices Adjacentes:\n");
-                    for(int i=0; i<(tam_adjacentes)-1; i++) {
+                    for(int i=0; i<(tam_adjacentes-1); i++) {
                         printf("%d, ", vetor_adjacentes[i]);
                     }
                     printf("%d.\n", vetor_adjacentes[tam_adjacentes]); // para uma formatação de saída bonita
@@ -78,13 +102,15 @@ int main(void) {
                 break;
             }
 
-            case 5: 
+            case 5: // imprimir vertice com maior quantidade de vizinhos
+            {
                 int vertice = vertice_com_mais_vizinhos(g);
                 if (vertice == -1) printf("\nGrafo nao encontrado ou vazio.\n");
                 else printf("\nVertice com maior quantidade de vizinhos: %d\n", vertice);
                 break;
+            }
 
-            case 6:
+            case 6: // checar existência de aresta
                 printf("Por favor, informe na seguinte ordem: [vertice a, verice b]\n");
                     scanf(" %d", &a);
                     scanf(" %d", &b);
@@ -95,20 +121,18 @@ int main(void) {
                 }
                 break;
             
-            case 7:
+            case 7: // tirar aresta
                 printf("Por favor, informe os vértices das extremidades da aresta a ser removida: ");
-                int a, b;
-                scanf(" %d %d", a, b);
+                scanf(" %d %d", &a, &b);
 
                 if (aresta_remover(g, a, b)) printf("\nRemocao bem sucedida.\n");
                 else printf("\nNao foi possivel fazer a remocao. Tente novamente.\n");
 
                 break;
 
-            case 0:
+            case 0: // destruir o grafo e finalizar o programa
                 if(grafo_destruir(&g)){
                     printf("\nPrograma finalizando...\n");
-                    flag = 0;
                 }else{
                     printf("Erro: grafo inexistente\n");
                     return 1;
