@@ -241,8 +241,8 @@ void vertices_arestas_imprimir(GRAFO* g){
 
     int primeira = 1; //formatacao das arestas separadas por virgula
 
-    for(int j = 0; j < g->n_vertices; j++){
-        for(int k = j + 1; k < g->n_vertices; k++){ //"j+1" para nao repetir arestas
+    for(int k = 0; k < g->n_vertices; k++){
+        for(int j = 0; j < k; j++){ //até k para não repetir arestas
             if(g->matriz[j][k] != -1){
 
                 if(!primeira){
@@ -450,7 +450,7 @@ int main(void) {
             {
                 int vertice = vertice_com_mais_vizinhos(g);
                 if (vertice != -1){
-                    printf("%d\n", vertice);
+                    printf("max vertex: %d\n", vertice);
                 }
                 break;
             }
